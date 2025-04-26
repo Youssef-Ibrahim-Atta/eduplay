@@ -1,0 +1,1920 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduPlay - Ultimate Learning Adventure</title>
+    <style>
+        /* ===== Global Styles ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        :root {
+            --math-color: #FF5E5E;
+            --science-color: #2EE7B6;
+            --history-color: #D97706;
+            --dark-blue: #1E2A44;
+            --light-bg: #F8FAFC;
+            --white: #FFFFFF;
+            --black: #1F2937;
+            --gray: #6B7280;
+            --gold: #FFD700;
+            --gradient: linear-gradient(135deg, #6EE7B7, #3B82F6, #EC4899);
+        }
+
+        body {
+            background-color: var(--light-bg);
+            color: var(--black);
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        h1, h2, h3 {
+            font-weight: 800;
+            line-height: 1.2;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 14px 28px;
+            border-radius: 12px;
+            font-weight: 600;
+            text-decoration: none;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background: var(--gradient);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-primary::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.4s, height 0.4s;
+        }
+
+        .btn-primary:active::after {
+            width: 200px;
+            height: 200px;
+        }
+
+        .btn-option {
+            background: var(--white);
+            border: 1px solid var(--gray);
+            color: var(--black);
+            margin: 8px;
+            width: 100%;
+            max-width: 300px;
+        }
+
+        .btn-option:hover {
+            background: var(--history-color);
+            color: var(--white);
+            border-color: transparent;
+        }
+
+        /* ===== Ecosystem Builder Styles ===== */
+        .ecosystem-area {
+            border: 2px dashed var(--science-color);
+            background: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            min-height: 100px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 16px;
+            color: var(--dark-blue);
+            transition: background 0.3s;
+        }
+
+        .ecosystem-area.dragover {
+            background: rgba(46, 231, 182, 0.2);
+        }
+
+        .organisms {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .organism {
+            background: var(--white);
+            border: 1px solid var(--gray);
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: move;
+            font-weight: 600;
+            color: var(--dark-blue);
+            transition: all 0.3s;
+            user-select: none;
+        }
+
+        .organism:hover {
+            background: var(--science-color);
+            color: var(--white);
+            border-color: transparent;
+        }
+
+        .feedback {
+            width: 100%;
+            text-align: center;
+            margin-top: 10px;
+            font-weight: 600;
+        }
+        .food-chain-options {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 20px;
+}
+
+.feedback {
+    text-align: center;
+    margin-top: 16px;
+    font-size: 18px;
+    font-weight: 600;
+}
+        /* ===== Header ===== */
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+        }
+
+        .logo {
+            font-size: 32px;
+            font-weight: 900;
+            color: var(--dark-blue);
+            display: flex;
+            align-items: center;
+        }
+
+        .logo-icon {
+            margin-right: 12px;
+            font-size: 40px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+        nav ul li {
+            margin-left: 40px;
+        }
+
+        nav ul li a {
+            color: var(--black);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 16px;
+            transition: color 0.3s, transform 0.3s;
+        }
+
+        nav ul li a:hover {
+            color: var(--dark-blue);
+            transform: translateY(-2px);
+        }
+
+        /* ===== Hero Section ===== */
+        .hero {
+            padding: 160px 0 120px;
+            text-align: center;
+            background: var(--gradient);
+            color: var(--white);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="rgba(255,255,255,0.1)" fill-opacity="1" d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,112C672,96,768,96,864,112C960,128,1056,160,1152,160C1248,160,1344,128,1392,112L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>') no-repeat bottom;
+            z-index: 0;
+        }
+
+        .hero h1 {
+            font-size: 64px;
+            margin-bottom: 24px;
+            animation: slideIn 1s ease-out;
+        }
+
+        .hero p {
+            font-size: 24px;
+            max-width: 800px;
+            margin: 0 auto 48px;
+            opacity: 0.9;
+            animation: slideIn 1.2s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ===== Game Selection ===== */
+        .game-selection {
+            padding: 100px 0;
+            background: var(--white);
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-title h2 {
+            font-size: 48px;
+            color: var(--dark-blue);
+            margin-bottom: 16px;
+        }
+
+        .section-title p {
+            font-size: 20px;
+            color: var(--gray);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .game-categories {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
+        }
+
+        .game-category {
+            background: var(--white);
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+            transition: transform 0.4s, box-shadow 0.4s;
+            text-align: center;
+            padding: 40px 24px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .game-category:hover {
+            transform: translateY(-12px);
+            box-shadow: 0 16px 32px rgba(0, 0, 0, 0.15);
+        }
+
+        .game-category::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            background: var(--gradient);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .category-icon {
+            font-size: 72px;
+            margin-bottom: 24px;
+            transition: transform 0.3s;
+        }
+
+        .game-category:hover .category-icon {
+            transform: scale(1.1);
+        }
+
+        .category-title {
+            font-size: 28px;
+            margin-bottom: 16px;
+            color: var(--dark-blue);
+        }
+
+        .category-desc {
+            color: var(--gray);
+            margin-bottom: 24px;
+            font-size: 16px;
+        }
+
+        /* ===== Game Levels ===== */
+        .game-levels {
+            display: none;
+            padding: 80px 0;
+            background: var(--light-bg);
+        }
+
+        .level-container {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+        }
+
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            margin-bottom: 24px;
+            color: var(--dark-blue);
+            font-weight: 600;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .back-button:hover {
+            color: var(--history-color);
+        }
+
+        .levels-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        .level-card {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 32px;
+            text-align: center;
+            transition: all 0.3s;
+            cursor: pointer;
+            position: relative;
+            border: 2px solid transparent;
+        }
+
+        .level-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+            border-color: var(--history-color);
+        }
+
+        .level-card.completed::after {
+            content: '★';
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            font-size: 28px;
+            color: var(--gold);
+        }
+
+        .level-number {
+            width: 72px;
+            height: 72px;
+            background: var(--gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--white);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .level-title {
+            font-size: 22px;
+            margin-bottom: 12px;
+            color: var(--dark-blue);
+        }
+
+        .level-desc {
+            font-size: 16px;
+            color: var(--gray);
+        }
+
+        /* ===== Game Container ===== */
+        .game-container {
+            display: none;
+            padding: 120px 0;
+            background: linear-gradient(135deg, #E0E7FF, #C3E8FF);
+            min-height: 100vh;
+            position: relative;
+        }
+
+        .game-canvas {
+            border: 4px solid var(--dark-blue);
+            border-radius: 16px;
+            display: block;
+            margin: 24px auto;
+            background: var(--white);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+        }
+
+        .game-controls {
+            text-align: center;
+            margin: 24px 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 16px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .game-controls h3 {
+            width: 100%;
+            font-size: 24px;
+            margin-bottom: 16px;
+            color: var(--dark-blue);
+        }
+
+        .game-controls button {
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        .game-controls p {
+            width: 100%;
+            max-width: 600px;
+            font-size: 16px;
+            color: var(--black);
+        }
+
+        .game-stats {
+            display: flex;
+            justify-content: space-between;
+            max-width: 800px;
+            margin: 24px auto;
+            font-weight: 600;
+            font-size: 18px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 16px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        /* ===== Modal ===== */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.75);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: var(--white);
+            padding: 40px;
+            border-radius: 16px;
+            text-align: center;
+            max-width: 600px;
+            width: 90%;
+            animation: bounceIn 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.2);
+        }
+
+        @keyframes bounceIn {
+            0% { transform: scale(0.7); opacity: 0; }
+            60% { transform: scale(1.1); opacity: 1; }
+            100% { transform: scale(1); }
+        }
+
+        .modal-content h2 {
+            color: var(--dark-blue);
+            font-size: 36px;
+            margin-bottom: 24px;
+        }
+
+        .modal-content .stars {
+            font-size: 40px;
+            color: var(--gold);
+            margin: 24px 0;
+        }
+
+        /* ===== Leaderboard ===== */
+        .leaderboard {
+            padding: 100px 0;
+            background: var(--white);
+            text-align: center;
+            display: none;
+        }
+
+        .leaderboard table {
+            width: 80%;
+            margin: 32px auto;
+            border-collapse: collapse;
+            background: var(--light-bg);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .leaderboard th, .leaderboard td {
+            padding: 20px;
+            font-size: 16px;
+        }
+
+        .leaderboard th {
+            background: var(--dark-blue);
+            color: var(--white);
+            font-weight: 700;
+        }
+
+        .leaderboard td {
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .leaderboard tr:hover {
+            background: rgba(0, 0, 0, 0.02);
+        }
+
+        /* ===== Footer ===== */
+        footer {
+            background: var(--dark-blue);
+            color: var(--white);
+            padding: 80px 0 32px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 48px;
+            margin-bottom: 48px;
+        }
+
+        .footer-column h3 {
+            font-size: 24px;
+            margin-bottom: 24px;
+        }
+
+        .footer-column ul {
+            list-style: none;
+        }
+
+        .footer-column ul li {
+            margin-bottom: 16px;
+        }
+
+        .footer-column ul li a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            font-size: 16px;
+            transition: color 0.3s;
+        }
+
+        .footer-column ul li a:hover {
+            color: var(--white);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 32px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 14px;
+        }
+
+        /* ===== Particle Background ===== */
+        #particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* ===== Responsive Design ===== */
+        @media (max-width: 992px) {
+            .game-categories, .levels-grid, .footer-content {
+                grid-template-columns: 1fr;
+                max-width: 600px;
+                margin: 0 auto;
+            }
+
+            .hero h1 {
+                font-size: 48px;
+            }
+
+            .hero p {
+                font-size: 20px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .hero {
+                padding: 120px 0 80px;
+            }
+
+            .game-canvas {
+                width: 100%;
+                height: auto;
+            }
+
+            .game-stats {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .game-controls button {
+                width: 100%;
+                max-width: 100%;
+            }
+
+            .ecosystem-area {
+                padding: 15px;
+                min-height: 80px;
+            }
+
+            .organism {
+                padding: 8px 16px;
+                font-size: 14px;
+            }
+        }
+
+        /* ===== Algebra Level Input Styles ===== */
+        #algebra-input {
+            width: 100%;
+            max-width: 350px;
+            padding: 12px 16px;
+            border: 2px solid var(--gray);
+            border-radius: 8px;
+            font-size: 16px;
+            margin-bottom: 16px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        #algebra-input:focus {
+            border-color: var(--math-color);
+            box-shadow: 0 0 8px rgba(255, 94, 94, 0.3);
+        }
+
+        #game-controls button {
+            padding: 12px 20px;
+            background: var(--math-color);
+            color: var(--white);
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s;
+        }
+
+        #game-controls button:hover {
+            background: #e04e4e;
+            transform: translateY(-2px);
+        }
+
+        #game-controls button:active {
+            transform: translateY(0);
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Particle Background -->
+    <canvas id="particles"></canvas>
+
+    <!-- Header -->
+    <header>
+        <div class="container header-container">
+            <div class="logo">
+                <span class="logo-icon">🚀</span>
+                <span>EduPlay</span>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#games">Games</a></li>
+                    <li><a href="#leaderboard">Leaderboard</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="container">
+            <h1>Master Skills with Epic Quests</h1>
+            <p>Transform learning into an adventure with our immersive games in Math, Science, and History/Social Studies.</p>
+            <a href="#games" class="btn btn-primary">Begin Your Journey</a>
+        </div>
+    </section>
+
+    <!-- Game Selection -->
+    <section class="game-selection" id="games">
+        <div class="container">
+            <div class="section-title">
+                <h2>Choose Your Path</h2>
+                <p>Embark on a quest to conquer Math, Science, or History/Social Studies</p>
+            </div>
+            <div class="game-categories">
+                <div class="game-category math-category" onclick="showLevels('math')">
+                    <div class="category-icon math-icon"><i class="fas fa-square-root-alt"></i></div>
+                    <h3 class="category-title">Mathematics</h3>
+                    <p class="category-desc">Solve puzzles to master numbers and equations</p>
+                    <a class="btn btn-primary" style="background: var(--math-color);">Explore Math</a>
+                </div>
+                <div class="game-category science-category" onclick="showLevels('science')">
+                    <div class="category-icon science-icon"><i class="fas fa-atom"></i></div>
+                    <h3 class="category-title">Science</h3>
+                    <p class="category-desc">Discover the universe through experiments</p>
+                    <a class="btn btn-primary" style="background: var(--science-color);">Explore Science</a>
+                </div>
+                <div class="game-category history-category" onclick="showLevels('history')">
+                    <div class="category-icon history-icon"><i class="fas fa-landmark"></i></div>
+                    <h3 class="category-title">History/Social Studies</h3>
+                    <p class="category-desc">Test your knowledge of the past and society</p>
+                    <a class="btn btn-primary" style="background: var(--history-color);">Explore History</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Math Levels -->
+    <section class="game-levels" id="math-levels">
+        <div class="container">
+            <div class="level-container">
+                <div class="back-button" onclick="hideLevels()"><i class="fas fa-arrow-left"></i> Back to Subjects</div>
+                <h2>Mathematics Quests</h2>
+                <p>Choose a level to start your math adventure</p>
+                <div class="levels-grid">
+                    <div class="level-card math-level" onclick="startGame('math', 1)">
+                        <div class="level-number">1</div>
+                        <h3 class="level-title">Number Ninja</h3>
+                        <p class="level-desc">Slice through arithmetic challenges</p>
+                    </div>
+                    <div class="level-card math-level" onclick="startGame('math', 2)">
+                        <div class="level-number">2</div>
+                        <h3 class="level-title">Fraction Frenzy</h3>
+                        <p class="level-desc">Match equivalent fractions</p>
+                    </div>
+                    <div class="level-card math-level" onclick="startGame('math', 3)">
+                        <div class="level-number">3</div>
+                        <h3 class="level-title">Algebra Adventure</h3>
+                        <p class="level-desc">Solve linear equations</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Science Levels -->
+    <section class="game-levels" id="science-levels">
+        <div class="container">
+            <div class="level-container">
+                <div class="back-button" onclick="hideLevels()"><i class="fas fa-arrow-left"></i> Back to Subjects</div>
+                <h2>Science Quests</h2>
+                <p>Choose a level to explore scientific wonders</p>
+                <div class="levels-grid">
+                    <div class="level-card science-level" onclick="startGame('science', 1)">
+                        <div class="level-number">1</div>
+                        <h3 class="level-title">Physics Playground</h3>
+                        <p class="level-desc">Experiment with motion and forces</p>
+                    </div>
+                    <div class="level-card science-level" onclick="startGame('science', 2)">
+                        <div class="level-number">2</div>
+                        <h3 class="level-title">Chemistry Lab</h3>
+                        <p class="level-desc">Match elements to their symbols</p>
+                    </div>
+                    <div class="level-card science-level" onclick="startGame('science', 3)">
+                        <div class="level-number">3</div>
+                        <h3 class="level-title">Food Chain Quiz</h3>
+                        <p class="level-desc">Test your knowledge on food chains</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- History/Social Studies Levels -->
+    <section class="game-levels" id="history-levels">
+        <div class="container">
+            <div class="level-container">
+                <div class="back-button" onclick="hideLevels()"><i class="fas fa-arrow-left"></i> Back to Subjects</div>
+                <h2>History/Social Studies Quests</h2>
+                <p>Choose a level to test your knowledge</p>
+                <div class="levels-grid">
+                    <div class="level-card history-level" onclick="startGame('history', 1)">
+                        <div class="level-number">1</div>
+                        <h3 class="level-title">Historical Events</h3>
+                        <p class="level-desc">Answer questions about key moments</p>
+                    </div>
+                    <div class="level-card history-level" onclick="startGame('history', 2)">
+                        <div class="level-number">2</div>
+                        <h3 class="level-title">World Geography</h3>
+                        <p class="level-desc">Test your knowledge of places</p>
+                    </div>
+                    <div class="level-card history-level" onclick="startGame('history', 3)">
+                        <div class="level-number">3</div>
+                        <h3 class="level-title">Civics & Culture</h3>
+                        <p class="level-desc">Explore government and society</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Game Container -->
+    <section class="game-container" id="game-container">
+        <div class="container">
+            <h2 id="game-title">Game Title</h2>
+            <div class="game-stats">
+                <span>Score: <span id="score">0</span></span>
+                <span>Time: <span id="timer">0s</span></span>
+                <span>Level: <span id="game-level">1</span></span>
+            </div>
+            <canvas id="game-canvas" class="game-canvas" width="800" height="500"></canvas>
+            <div class="game-controls" id="game-controls"></div>
+            <button class="btn btn-primary" onclick="exitGame()">Exit Game</button>
+        </div>
+    </section>
+
+    <!-- Leaderboard -->
+    <section class="leaderboard" id="leaderboard">
+        <div class="container">
+            <h2>Global Leaderboard</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Player</th>
+                        <th>Score</th>
+                        <th>Subject</th>
+                    </tr>
+                </thead>
+                <tbody id="leaderboard-table"></tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- Modal -->
+    <div class="modal" id="game-modal">
+        <div class="modal-content">
+            <h2>Quest Complete!</h2>
+            <p>Score: <span id="modal-score"></span></p>
+            <div class="stars" id="modal-stars"></div>
+            <div>
+                <button class="btn btn-primary" onclick="playAgain()">Play Again</button>
+                <button class="btn btn-primary" onclick="returnToLevels()">Return to Levels</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>EduPlay</h3>
+                    <p>Revolutionizing education with thrilling game-based learning.</p>
+                </div>
+                <div class="footer-column">
+                    <h3>Subjects</h3>
+                    <ul>
+                        <li><a href="#" onclick="showLevels('math')">Mathematics</a></li>
+                        <li><a href="#" onclick="showLevels('science')">Science</a></li>
+                        <li><a href="#" onclick="showLevels('history')">History/Social Studies</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Contact</h3>
+                    <ul>
+                        <li><a href="#">Email Us</a></li>
+                        <li><a href="#">Support</a></li>
+                        <li><a href="#">Feedback</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>© 2025 EduPlay. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Core Variables
+        const gameContainer = document.getElementById('game-container');
+        const gameCanvas = document.getElementById('game-canvas');
+        const ctx = gameCanvas.getContext('2d');
+        const gameControls = document.getElementById('game-controls');
+        const gameModal = document.getElementById('game-modal');
+        let currentGame = null;
+        let score = 0;
+        let timer = 0;
+        let timerInterval;
+
+        // Progress Tracking
+        let userProgress = JSON.parse(localStorage.getItem('eduplayProgress')) || {
+            math: {}, science: {}, history: {}, leaderboard: []
+        };
+
+        // Particle Background
+        const particlesCanvas = document.getElementById('particles');
+        const particlesCtx = particlesCanvas.getContext('2d');
+        particlesCanvas.width = window.innerWidth;
+        particlesCanvas.height = window.innerHeight;
+        const particles = [];
+
+        function createParticles() {
+            for (let i = 0; i < 100; i++) {
+                particles.push({
+                    x: Math.random() * particlesCanvas.width,
+                    y: Math.random() * particlesCanvas.height,
+                    radius: Math.random() * 2 + 1,
+                    vx: (Math.random() - 0.5) * 2,
+                    vy: (Math.random() - 0.5) * 2
+                });
+            }
+        }
+
+        function animateParticles() {
+            particlesCtx.clearRect(0, 0, particlesCanvas.width, particlesCanvas.height);
+            particles.forEach(p => {
+                p.x += p.vx;
+                p.y += p.vy;
+                if (p.x < 0 || p.x > particlesCanvas.width) p.vx *= -1;
+                if (p.y < 0 || p.y > particlesCanvas.height) p.vy *= -1;
+                particlesCtx.beginPath();
+                particlesCtx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                particlesCtx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+                particlesCtx.fill();
+            });
+            requestAnimationFrame(animateParticles);
+        }
+
+        window.addEventListener('resize', () => {
+            particlesCanvas.width = window.innerWidth;
+            particlesCanvas.height = window.innerHeight;
+        });
+
+        createParticles();
+        animateParticles();
+
+        // Navigation
+        function showLevels(subject) {
+            document.querySelector('.game-selection').style.display = 'none';
+            document.getElementById('leaderboard').style.display = 'none';
+            document.getElementById(subject + '-levels').style.display = 'block';
+            gameContainer.style.display = 'none';
+            updateLevelCards(subject);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function hideLevels() {
+            document.querySelector('.game-selection').style.display = 'block';
+            document.getElementById('math-levels').style.display = 'none';
+            document.getElementById('science-levels').style.display = 'none';
+            document.getElementById('history-levels').style.display = 'none';
+            document.getElementById('leaderboard').style.display = 'none';
+            gameContainer.style.display = 'none';
+            window.scrollTo({ top: document.getElementById('games').offsetTop, behavior: 'smooth' });
+        }
+
+        function showLeaderboard() {
+            document.querySelector('.game-selection').style.display = 'none';
+            document.getElementById('math-levels').style.display = 'none';
+            document.getElementById('science-levels').style.display = 'none';
+            document.getElementById('history-levels').style.display = 'none';
+            gameContainer.style.display = 'none';
+            document.getElementById('leaderboard').style.display = 'block';
+            updateLeaderboard();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function updateLevelCards(subject) {
+            const levelCards = document.querySelectorAll(`#${subject}-levels .level-card`);
+            levelCards.forEach(card => {
+                const level = card.querySelector('.level-number').textContent;
+                if (userProgress[subject][level]?.completed) {
+                    card.classList.add('completed');
+                }
+            });
+        }
+
+        // Game Management
+        function startGame(subject, level) {
+            document.querySelector('.game-selection').style.display = 'none';
+            document.getElementById('math-levels').style.display = 'none';
+            document.getElementById('science-levels').style.display = 'none';
+            document.getElementById('history-levels').style.display = 'none';
+            document.getElementById('leaderboard').style.display = 'none';
+            gameContainer.style.display = 'block';
+            document.getElementById('game-level').textContent = level;
+            score = 0;
+            timer = 0;
+            document.getElementById('score').textContent = score;
+            document.getElementById('timer').textContent = `${timer}s`;
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                timer++;
+                document.getElementById('timer').textContent = `${timer}s`;
+            }, 1000);
+
+            gameControls.innerHTML = '';
+            ctx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
+            if (currentGame) currentGame.stop();
+
+            if (subject === 'math') {
+                if (level == 1) {
+                    document.getElementById('game-title').textContent = 'Number Ninja';
+                    currentGame = new NumberNinjaGame();
+                } else if (level == 2) {
+                    document.getElementById('game-title').textContent = 'Fraction Frenzy';
+                    currentGame = new FractionFrenzyGame();
+                } else if (level == 3) {
+                    document.getElementById('game-title').textContent = 'Algebra Adventure';
+                    currentGame = new AlgebraAdventureGame();
+                }
+            } else if (subject === 'science') {
+                if (level == 1) {
+                    document.getElementById('game-title').textContent = 'Physics Playground';
+                    currentGame = new PhysicsPlaygroundGame();
+                } else if (level == 2) {
+                    document.getElementById('game-title').textContent = 'Chemistry Lab';
+                    currentGame = new ChemistryLabGame();
+                } else if (level == 3) {
+                    document.getElementById('game-title').textContent = 'Food Chain Quiz';
+                    currentGame = new FoodChainQuizGame(); // Updated to use FoodChainQuizGame
+                }
+            } else if (subject === 'history') {
+                if (level == 1) {
+                    document.getElementById('game-title').textContent = 'Historical Events';
+                    currentGame = new HistoricalEventsGame();
+                } else if (level == 2) {
+                    document.getElementById('game-title').textContent = 'World Geography';
+                    currentGame = new WorldGeographyGame();
+                } else if (level == 3) {
+                    document.getElementById('game-title').textContent = 'Civics & Culture';
+                    currentGame = new CivicsCultureGame();
+                }
+            }
+            currentGame.start();
+        }
+
+        function exitGame() {
+            clearInterval(timerInterval);
+            if (currentGame) currentGame.stop();
+            showLevels(currentGame.subject);
+        }
+
+        function showGameResult(stars) {
+            clearInterval(timerInterval);
+            document.getElementById('modal-score').textContent = score;
+            document.getElementById('modal-stars').textContent = '★'.repeat(stars);
+            gameModal.style.display = 'flex';
+            userProgress[currentGame.subject][currentGame.level] = {
+                completed: true,
+                score: score,
+                stars: stars
+            };
+            updateLeaderboardData(currentGame.subject, score);
+            localStorage.setItem('eduplayProgress', JSON.stringify(userProgress));
+        }
+
+        function playAgain() {
+            gameModal.style.display = 'none';
+            startGame(currentGame.subject, currentGame.level);
+        }
+
+        function returnToLevels() {
+            gameModal.style.display = 'none';
+            showLevels(currentGame.subject);
+        }
+
+        // Leaderboard
+        function updateLeaderboardData(subject, score) {
+            userProgress.leaderboard.push({
+                player: 'Player' + Math.floor(Math.random() * 1000),
+                score: score,
+                subject: subject
+            });
+            userProgress.leaderboard.sort((a, b) => b.score - a.score);
+            userProgress.leaderboard = userProgress.leaderboard.slice(0, 10);
+            localStorage.setItem('eduplayProgress', JSON.stringify(userProgress));
+        }
+
+        function updateLeaderboard() {
+            const tbody = document.getElementById('leaderboard-table');
+            tbody.innerHTML = '';
+            userProgress.leaderboard.forEach((entry, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>${entry.player}</td>
+                    <td>${entry.score}</td>
+                    <td>${entry.subject}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // Math Level 1: Number Ninja
+        class NumberNinjaGame {
+            constructor() {
+                this.subject = 'math';
+                this.level = 1;
+                this.numbers = [];
+                this.correctAnswer = null;
+                this.difficulty = 1;
+            }
+
+            start() {
+                this.generateQuestion();
+                gameCanvas.addEventListener('click', this.handleClick.bind(this));
+                gameCanvas.setAttribute('aria-label', 'Number Ninja Game: Click the correct answer');
+                this.animate();
+            }
+
+            stop() {
+                gameCanvas.removeEventListener('click', this.handleClick.bind(this));
+                cancelAnimationFrame(this.animationFrame);
+            }
+
+            generateQuestion() {
+                const num1 = Math.floor(Math.random() * 10 * this.difficulty) + 1;
+                const num2 = Math.floor(Math.random() * 10 * this.difficulty) + 1;
+                const operations = ['+', '-', '*'];
+                const operation = operations[Math.floor(Math.random() * operations.length)];
+                this.correctAnswer = eval(`${num1} ${operation} ${num2}`);
+                document.getElementById('game-title').innerHTML = `Solve: ${num1} ${operation} ${num2} = ?`;
+
+                this.numbers = [];
+                for (let i = 0; i < 5; i++) {
+                    let answer = this.correctAnswer + (Math.random() * 20 - 10);
+                    this.numbers.push({
+                        x: Math.random() * (gameCanvas.width - 50),
+                        y: -20,
+                        value: Math.round(answer),
+                        speed: 1 + this.difficulty * 0.5
+                    });
+                }
+                this.numbers.push({
+                    x: Math.random() * (gameCanvas.width - 50),
+                    y: -20,
+                    value: this.correctAnswer,
+                    speed: 1 + this.difficulty * 0.5
+                });
+            }
+
+            handleClick(e) {
+                const rect = gameCanvas.getBoundingClientRect();
+                const clickX = e.clientX - rect.left;
+                const clickY = e.clientY - rect.top;
+
+                for (let i = this.numbers.length - 1; i >= 0; i--) {
+                    const num = this.numbers[i];
+                    if (Math.abs(clickX - num.x) < 30 && Math.abs(clickY - num.y) < 30) {
+                        if (num.value === this.correctAnswer) {
+                            score += 10 * this.difficulty;
+                            this.difficulty += 0.2;
+                            document.getElementById('score').textContent = score;
+                            this.generateQuestion();
+                            if (score >= 100) {
+                                this.stop();
+                                showGameResult(3);
+                            }
+                        } else {
+                            score = Math.max(0, score - 5);
+                            document.getElementById('score').textContent = score;
+                        }
+                        break;
+                    }
+                }
+            }
+
+            animate() {
+                ctx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+                ctx.fillRect(0, 0, gameCanvas.width, gameCanvas.height);
+                this.numbers.forEach(num => {
+                    num.y += num.speed;
+                    if (num.y > gameCanvas.height) num.y = -20;
+                    ctx.fillStyle = num.value === this.correctAnswer ? '#22C55E' : '#EF4444';
+                    ctx.beginPath();
+                    ctx.arc(num.x, num.y, 25, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.fillStyle = '#FFFFFF';
+                    ctx.font = '18px Inter';
+                    ctx.textAlign = 'center';
+                    ctx.fillText(num.value, num.x, num.y + 6);
+                });
+                this.animationFrame = requestAnimationFrame(this.animate.bind(this));
+            }
+        }
+
+        // Math Level 2: Fraction Frenzy
+        class FractionFrenzyGame {
+            constructor() {
+                this.subject = 'math';
+                this.level = 2;
+                this.fractions = [];
+                this.targetFraction = null;
+                this.difficulty = 1;
+            }
+
+            start() {
+                this.generateFractions();
+                gameCanvas.addEventListener('click', this.handleClick.bind(this));
+                gameCanvas.setAttribute('aria-label', 'Fraction Frenzy Game: Click the equivalent fraction');
+                this.animate();
+            }
+
+            stop() {
+                gameCanvas.removeEventListener('click', this.handleClick.bind(this));
+                cancelAnimationFrame(this.animationFrame);
+            }
+
+            generateFractions() {
+                const num = Math.floor(Math.random() * 5) + 1;
+                const denom = Math.floor(Math.random() * 5) + 2;
+                this.targetFraction = { num, denom };
+                document.getElementById('game-title').innerHTML = `Match: ${num}/${denom}`;
+
+                this.fractions = [];
+                for (let i = 0; i < 5; i++) {
+                    const fNum = Math.floor(Math.random() * 10) + 1;
+                    const fDenom = Math.floor(Math.random() * 10) + 2;
+                    this.fractions.push({
+                        x: Math.random() * (gameCanvas.width - 50),
+                        y: -20,
+                        num: fNum,
+                        denom: fDenom,
+                        speed: 1 + this.difficulty * 0.5
+                    });
+                }
+                const multiplier = Math.floor(Math.random() * 3) + 2;
+                this.fractions.push({
+                    x: Math.random() * (gameCanvas.width - 50),
+                    y: -20,
+                    num: num * multiplier,
+                    denom: denom * multiplier,
+                    speed: 1 + this.difficulty * 0.5
+                });
+            }
+
+            handleClick(e) {
+                const rect = gameCanvas.getBoundingClientRect();
+                const clickX = e.clientX - rect.left;
+                const clickY = e.clientY - rect.top;
+
+                for (let i = this.fractions.length - 1; i >= 0; i--) {
+                    const frac = this.fractions[i];
+                    if (Math.abs(clickX - frac.x) < 30 && Math.abs(clickY - frac.y) < 30) {
+                        if (frac.num / frac.denom === this.targetFraction.num / this.targetFraction.denom) {
+                            score += 15 * this.difficulty;
+                            this.difficulty += 0.2;
+                            document.getElementById('score').textContent = score;
+                            this.generateFractions();
+                            if (score >= 150) {
+                                this.stop();
+                                showGameResult(3);
+                            }
+                        } else {
+                            score = Math.max(0, score - 5);
+                            document.getElementById('score').textContent = score;
+                        }
+                        break;
+                    }
+                }
+            }
+
+            animate() {
+                ctx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+                ctx.fillRect(0, 0, gameCanvas.width, gameCanvas.height);
+                this.fractions.forEach(frac => {
+                    frac.y += frac.speed;
+                    if (frac.y > gameCanvas.height) frac.y = -20;
+                    ctx.fillStyle = frac.num / frac.denom === this.targetFraction.num / this.targetFraction.denom ? '#22C55E' : '#EF4444';
+                    ctx.beginPath();
+                    ctx.arc(frac.x, frac.y, 25, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.fillStyle = '#FFFFFF';
+                    ctx.font = '16px Inter';
+                    ctx.textAlign = 'center';
+                    ctx.fillText(`${frac.num}/${frac.denom}`, frac.x, frac.y + 6);
+                });
+                this.animationFrame = requestAnimationFrame(this.animate.bind(this));
+            }
+        }
+
+        // Math Level 3: Algebra Adventure
+        class AlgebraAdventureGame {
+            constructor() {
+                this.subject = 'math';
+                this.level = 3;
+                this.equation = null;
+                this.correctAnswer = null;
+            }
+
+            start() {
+                gameCanvas.style.display = 'none';
+                this.generateEquation();
+                gameControls.innerHTML = `
+                    <input type="number" id="algebra-input" placeholder="Enter your answer" aria-label="Enter the solution to the equation">
+                    <button onclick="currentGame.checkAnswer()">Submit</button>
+                `;
+                gameControls.querySelector('input').focus();
+            }
+
+            stop() {
+                gameCanvas.style.display = 'block';
+            }
+
+            generateEquation() {
+                const a = Math.floor(Math.random() * 10) + 1;
+                const b = Math.floor(Math.random() * 20) - 10;
+                const x = Math.floor(Math.random() * 10) - 5;
+                this.correctAnswer = x;
+                const result = a * x + b;
+                this.equation = `${a}x + ${b} = ${result}`;
+                document.getElementById('game-title').innerHTML = `Solve for x: ${this.equation}`;
+            }
+
+            checkAnswer() {
+                const input = parseInt(document.getElementById('algebra-input').value);
+                if (input === this.correctAnswer) {
+                    score += 20;
+                    document.getElementById('score').textContent = score;
+                    this.generateEquation();
+                    document.getElementById('algebra-input').value = '';
+                    if (score >= 200) {
+                        this.stop();
+                        showGameResult(3);
+                    }
+                } else {
+                    score = Math.max(0, score - 10);
+                    document.getElementById('score').textContent = score;
+                }
+            }
+        }
+
+        // Science Level 1: Physics Playground
+        class PhysicsPlaygroundGame {
+            constructor() {
+                this.subject = 'science';
+                this.level = 1;
+                this.balls = [];
+                this.gravity = 0.3;
+                this.difficulty = 1;
+            }
+
+            start() {
+                gameControls.innerHTML = `
+                    <button onclick="currentGame.addBall()">Add Ball</button>
+                    <button onclick="currentGame.toggleGravity()">Toggle Gravity</button>
+                `;
+                gameCanvas.setAttribute('aria-label', 'Physics Playground: Add balls and toggle gravity');
+                this.animate();
+            }
+
+            stop() {
+                cancelAnimationFrame(this.animationFrame);
+            }
+
+            addBall() {
+                this.balls.push({
+                    x: Math.random() * gameCanvas.width,
+                    y: 50,
+                    vx: (Math.random() - 0.5) * 5 * this.difficulty,
+                    vy: 0,
+                    radius: 20
+                });
+            }
+
+            toggleGravity() {
+                this.gravity = this.gravity === 0 ? 0.3 : 0;
+            }
+
+            animate() {
+                ctx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+                ctx.fillRect(0, 0, gameCanvas.width, gameCanvas.height);
+                this.balls.forEach(ball => {
+                    ball.vy += this.gravity;
+                    ball.x += ball.vx;
+                    ball.y += ball.vy;
+
+                    if (ball.y + ball.radius > gameCanvas.height) {
+                        ball.y = gameCanvas.height - ball.radius;
+                        ball.vy *= -0.8;
+                        score += 10 * this.difficulty;
+                        this.difficulty += 0.1;
+                        document.getElementById('score').textContent = score;
+                    }
+                    if (ball.x + ball.radius > gameCanvas.width || ball.x - ball.radius < 0) {
+                        ball.vx *= -1;
+                    }
+
+                    ctx.fillStyle = '#3B82F6';
+                    ctx.beginPath();
+                    ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
+                    ctx.fill();
+                });
+
+                if (score >= 100) {
+                    this.stop();
+                    showGameResult(3);
+                }
+                this.animationFrame = requestAnimationFrame(this.animate.bind(this));
+            }
+        }
+
+        // Science Level 2: Chemistry Lab
+        class ChemistryLabGame {
+            constructor() {
+                this.subject = 'science';
+                this.level = 2;
+                this.elements = [];
+                this.targetElement = null;
+                this.difficulty = 1;
+                this.usedElements = [];
+            }
+
+            start() {
+                this.generateReaction();
+                gameCanvas.addEventListener('click', this.handleClick.bind(this));
+                gameCanvas.setAttribute('aria-label', 'Chemistry Lab: Click the correct chemical symbol');
+                this.animate();
+            }
+
+            stop() {
+                gameCanvas.removeEventListener('click', this.handleClick.bind(this));
+                cancelAnimationFrame(this.animationFrame);
+            }
+
+            generateReaction() {
+                const periodicTable = [
+                    { name: 'Hydrogen', symbol: 'H' }, { name: 'Helium', symbol: 'He' },
+                    { name: 'Lithium', symbol: 'Li' }, { name: 'Beryllium', symbol: 'Be' },
+                    { name: 'Boron', symbol: 'B' }, { name: 'Carbon', symbol: 'C' },
+                    { name: 'Nitrogen', symbol: 'N' }, { name: 'Oxygen', symbol: 'O' }
+                ];
+
+                if (this.usedElements.length > 6) {
+                    this.usedElements = [];
+                }
+
+                let availableElements = periodicTable.filter(el => !this.usedElements.includes(el.symbol));
+                this.targetElement = availableElements[Math.floor(Math.random() * availableElements.length)];
+                this.usedElements.push(this.targetElement.symbol);
+
+                document.getElementById('game-title').innerHTML = `Form: ${this.targetElement.name}`;
+
+                this.elements = [];
+                for (let i = 0; i < 5; i++) {
+                    let wrong;
+                    do {
+                        wrong = periodicTable[Math.floor(Math.random() * periodicTable.length)];
+                    } while (wrong.symbol === this.targetElement.symbol || this.elements.some(el => el.symbol === wrong.symbol));
+                    this.elements.push({
+                        x: Math.random() * (gameCanvas.width - 50),
+                        y: -20,
+                        symbol: wrong.symbol,
+                        speed: 1 + this.difficulty * 0.5
+                    });
+                }
+                this.elements.push({
+                    x: Math.random() * (gameCanvas.width - 50),
+                    y: -20,
+                    symbol: this.targetElement.symbol,
+                    speed: 1 + this.difficulty * 0.5
+                });
+            }
+
+            handleClick(e) {
+                const rect = gameCanvas.getBoundingClientRect();
+                const clickX = e.clientX - rect.left;
+                const clickY = e.clientY - rect.top;
+
+                for (let i = this.elements.length - 1; i >= 0; i--) {
+                    const elem = this.elements[i];
+                    if (Math.abs(clickX - elem.x) < 30 && Math.abs(clickY - elem.y) < 30) {
+                        if (elem.symbol === this.targetElement.symbol) {
+                            score += 15 * this.difficulty;
+                            this.difficulty += 0.2;
+                            document.getElementById('score').textContent = score;
+                            this.generateReaction();
+                            if (score >= 150) {
+                                this.stop();
+                                showGameResult(3);
+                            }
+                        } else {
+                            score = Math.max(0, score - 5);
+                            document.getElementById('score').textContent = score;
+                        }
+                        break;
+                    }
+                }
+            }
+
+            animate() {
+                ctx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+                ctx.fillRect(0, 0, gameCanvas.width, gameCanvas.height);
+                this.elements.forEach(elem => {
+                    elem.y += elem.speed;
+                    if (elem.y > gameCanvas.height) elem.y = -20;
+                    ctx.fillStyle = elem.symbol === this.targetElement.symbol ? '#22C55E' : '#EF4444';
+                    ctx.beginPath();
+                    ctx.arc(elem.x, elem.y, 25, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.fillStyle = '#FFFFFF';
+                    ctx.font = '16px Inter';
+                    ctx.textAlign = 'center';
+                    ctx.fillText(elem.symbol, elem.x, elem.y + 6);
+                });
+                this.animationFrame = requestAnimationFrame(this.animate.bind(this));
+            }
+        }
+
+        // Science Level 3: Food Chain Quiz
+        class FoodChainQuizGame {
+            constructor() {
+                this.subject = 'science';
+                this.level = 3;
+                this.questions = [
+                    { organism: 'Grass', role: 'Producer' },
+                    { organism: 'Rabbit', role: 'Herbivore' },
+                    { organism: 'Lion', role: 'Predator' }
+                ];
+                this.currentQuestionIndex = 0;
+                this.correctAnswers = 0;
+            }
+
+            start() {
+                gameCanvas.style.display = 'none';
+                this.correctAnswers = 0;
+                this.currentQuestionIndex = 0;
+                this.showQuestion();
+            }
+
+            stop() {
+                gameCanvas.style.display = 'block';
+            }
+
+            showQuestion() {
+                const question = this.questions[this.currentQuestionIndex];
+                gameControls.innerHTML = `
+                    <h3>What is the role of <strong>${question.organism}</strong> in the food chain?</h3>
+                    <div class="food-chain-options">
+                        <button class="btn btn-option" onclick="currentGame.checkAnswer('Producer')">Producer</button>
+                        <button class="btn btn-option" onclick="currentGame.checkAnswer('Herbivore')">Herbivore</button>
+                        <button class="btn btn-option" onclick="currentGame.checkAnswer('Predator')">Predator</button>
+                    </div>
+                    <p class="feedback" id="food-chain-feedback"></p>
+                `;
+            }
+
+            checkAnswer(selectedRole) {
+                const question = this.questions[this.currentQuestionIndex];
+                const feedbackEl = document.getElementById('food-chain-feedback');
+
+                if (selectedRole === question.role) {
+                    score += 50;
+                    this.correctAnswers++;
+                    feedbackEl.textContent = 'Correct!';
+                    feedbackEl.style.color = 'green';
+                } else {
+                    score = Math.max(0, score - 10);
+                    feedbackEl.textContent = `Incorrect! The correct answer is ${question.role}.`;
+                    feedbackEl.style.color = 'red';
+                }
+
+                document.getElementById('score').textContent = score;
+
+                setTimeout(() => {
+                    this.nextQuestion();
+                }, 1000);
+            }
+
+            nextQuestion() {
+                this.currentQuestionIndex++;
+                if (this.currentQuestionIndex < this.questions.length) {
+                    this.showQuestion();
+                } else {
+                    this.stop();
+                    showGameResult(this.correctAnswers >= 2 ? 3 : 1);
+                }
+            }
+        }
+
+        // History/Social Studies Level 1: Historical Events
+        class HistoricalEventsGame {
+            constructor() {
+                this.subject = 'history';
+                this.level = 1;
+                this.questions = [
+                    {
+                        question: 'When was the Declaration of Independence signed?',
+                        options: ['1776', '1789', '1800', '1750'],
+                        correct: '1776'
+                    },
+                    {
+                        question: 'Who was the first president of the United States?',
+                        options: ['Thomas Jefferson', 'George Washington', 'John Adams', 'Abraham Lincoln'],
+                        correct: 'George Washington'
+                    },
+                    {
+                        question: 'What year did World War II end?',
+                        options: ['1945', '1939', '1918', '1950'],
+                        correct: '1945'
+                    }
+                ];
+                this.currentQuestionIndex = 0;
+                this.difficulty = 1;
+            }
+
+            start() {
+                gameCanvas.style.display = 'none';
+                this.currentQuestionIndex = 0;
+                this.showQuestion();
+            }
+
+            stop() {
+                gameCanvas.style.display = 'block';
+            }
+
+            showQuestion() {
+                const question = this.questions[this.currentQuestionIndex];
+                gameControls.innerHTML = `
+                    <h3 id="history-question">${question.question}</h3>
+                    ${question.options.map((opt, index) => `
+                        <button class="btn btn-option" onclick="currentGame.checkAnswer('${opt}')" aria-label="Option ${index + 1}: ${opt}">${opt}</button>
+                    `).join('')}
+                    <p id="history-feedback"></p>
+                `;
+            }
+
+            checkAnswer(selected) {
+                const question = this.questions[this.currentQuestionIndex];
+                const feedbackEl = document.getElementById('history-feedback');
+                if (selected === question.correct) {
+                    score += 50 * this.difficulty;
+                    this.difficulty += 0.2;
+                    feedbackEl.textContent = 'Correct!';
+                } else {
+                    score = Math.max(0, score - 10);
+                    feedbackEl.textContent = 'Incorrect!';
+                }
+                document.getElementById('score').textContent = score;
+                gameControls.innerHTML += `
+                    <button class="btn btn-primary" onclick="currentGame.nextQuestion()">${this.currentQuestionIndex < 2 ? 'Next Question' : 'Finish'}</button>
+                `;
+                document.querySelectorAll('.btn-option').forEach(btn => btn.disabled = true);
+            }
+
+            nextQuestion() {
+                this.currentQuestionIndex++;
+                if (this.currentQuestionIndex < this.questions.length) {
+                    this.showQuestion();
+                } else {
+                    this.stop();
+                    showGameResult(3);
+                }
+            }
+        }
+
+        // History/Social Studies Level 2: World Geography
+        class WorldGeographyGame {
+            constructor() {
+                this.subject = 'history';
+                this.level = 2;
+                this.questions = [
+                    {
+                        question: 'What is the capital of Brazil?',
+                        options: ['Rio de Janeiro', 'Sao Paulo', 'Brasilia', 'Salvador'],
+                        correct: 'Brasilia'
+                    },
+                    {
+                        question: 'Which country is known as the Land of the Rising Sun?',
+                        options: ['China', 'Japan', 'South Korea', 'Thailand'],
+                        correct: 'Japan'
+                    },
+                    {
+                        question: 'What is the longest river in the world?',
+                        options: ['Amazon', 'Nile', 'Yangtze', 'Mississippi'],
+                        correct: 'Nile'
+                    }
+                ];
+                this.currentQuestionIndex = 0;
+                this.difficulty = 1;
+            }
+
+            start() {
+                gameCanvas.style.display = 'none';
+                this.currentQuestionIndex = 0;
+                this.showQuestion();
+            }
+
+            stop() {
+                gameCanvas.style.display = 'block';
+            }
+
+            showQuestion() {
+                const question = this.questions[this.currentQuestionIndex];
+                gameControls.innerHTML = `
+                    <h3 id="history-question">${question.question}</h3>
+                    ${question.options.map((opt, index) => `
+                        <button class="btn btn-option" onclick="currentGame.checkAnswer('${opt}')" aria-label="Option ${index + 1}: ${opt}">${opt}</button>
+                    `).join('')}
+                    <p id="history-feedback"></p>
+                `;
+            }
+
+            checkAnswer(selected) {
+                const question = this.questions[this.currentQuestionIndex];
+                const feedbackEl = document.getElementById('history-feedback');
+                if (selected === question.correct) {
+                    score += 50 * this.difficulty;
+                    this.difficulty += 0.2;
+                    feedbackEl.textContent = 'Correct!';
+                } else {
+                    score = Math.max(0, score - 10);
+                    feedbackEl.textContent = 'Incorrect!';
+                }
+                document.getElementById('score').textContent = score;
+                gameControls.innerHTML += `
+                    <button class="btn btn-primary" onclick="currentGame.nextQuestion()">${this.currentQuestionIndex < 2 ? 'Next Question' : 'Finish'}</button>
+                `;
+                document.querySelectorAll('.btn-option').forEach(btn => btn.disabled = true);
+            }
+
+            nextQuestion() {
+                this.currentQuestionIndex++;
+                if (this.currentQuestionIndex < this.questions.length) {
+                    this.showQuestion();
+                } else {
+                    this.stop();
+                    showGameResult(3);
+                }
+            }
+        }
+
+        // History/Social Studies Level 3: Civics & Culture
+        class CivicsCultureGame {
+            constructor() {
+                this.subject = 'history';
+                this.level = 3;
+                this.questions = [
+                    {
+                        question: 'What is the supreme law of the United States?',
+                        options: ['Bill of Rights', 'Constitution', 'Declaration of Independence', 'Articles of Confederation'],
+                        correct: 'Constitution'
+                    },
+                    {
+                        question: 'How many branches are in the U.S. federal government?',
+                        options: ['Two', 'Three', 'Four', 'Five'],
+                        correct: 'Three'
+                    },
+                    {
+                        question: 'What economic system is based on individual ownership?',
+                        options: ['Socialism', 'Communism', 'Capitalism', 'Feudalism'],
+                        correct: 'Capitalism'
+                    }
+                ];
+                this.currentQuestionIndex = 0;
+                this.difficulty = 1;
+            }
+
+            start() {
+                gameCanvas.style.display = 'none';
+                this.currentQuestionIndex = 0;
+                this.showQuestion();
+            }
+
+            stop() {
+                gameCanvas.style.display = 'block';
+            }
+
+            showQuestion() {
+                const question = this.questions[this.currentQuestionIndex];
+                gameControls.innerHTML = `
+                    <h3 id="history-question">${question.question}</h3>
+                    ${question.options.map((opt, index) => `
+                        <button class="btn btn-option" onclick="currentGame.checkAnswer('${opt}')" aria-label="Option ${index + 1}: ${opt}">${opt}</button>
+                    `).join('')}
+                    <p id="history-feedback"></p>
+                `;
+            }
+
+            checkAnswer(selected) {
+                const question = this.questions[this.currentQuestionIndex];
+                const feedbackEl = document.getElementById('history-feedback');
+                if (selected === question.correct) {
+                    score += 50 * this.difficulty;
+                    this.difficulty += 0.2;
+                    feedbackEl.textContent = 'Correct!';
+                } else {
+                    score = Math.max(0, score - 10);
+                    feedbackEl.textContent = 'Incorrect!';
+                }
+                document.getElementById('score').textContent = score;
+                gameControls.innerHTML += `
+                    <button class="btn btn-primary" onclick="currentGame.nextQuestion()">${this.currentQuestionIndex < 2 ? 'Next Question' : 'Finish'}</button>
+                `;
+                document.querySelectorAll('.btn-option').forEach(btn => btn.disabled = true);
+            }
+
+            nextQuestion() {
+                this.currentQuestionIndex++;
+                if (this.currentQuestionIndex < this.questions.length) {
+                    this.showQuestion();
+                } else {
+                    this.stop();
+                    showGameResult(3);
+                }
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('math-levels').style.display = 'none';
+            document.getElementById('science-levels').style.display = 'none';
+            document.getElementById('history-levels').style.display = 'none';
+            document.getElementById('leaderboard').style.display = 'none';
+            gameContainer.style.display = 'none';
+
+            document.querySelectorAll('nav a').forEach(link => {
+                link.addEventListener('click', e => {
+                    e.preventDefault();
+                    const target = e.target.getAttribute('href').substring(1);
+                    if (target === 'leaderboard') {
+                        showLeaderboard();
+                    } else if (target === 'games') {
+                        hideLevels();
+                    } else if (target === 'home') {
+                        document.querySelector('.game-selection').style.display = 'block';
+                        document.getElementById('math-levels').style.display = 'none';
+                        document.getElementById('science-levels').style.display = 'none';
+                        document.getElementById('history-levels').style.display = 'none';
+                        document.getElementById('leaderboard').style.display = 'none';
+                        gameContainer.style.display = 'none';
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }
+                });
+            });
+
+            updateLeaderboard();
+            ['math', 'science', 'history'].forEach(subject => {
+                updateLevelCards(subject);
+            });
+
+            gameCanvas.setAttribute('tabindex', '0');
+        });
+    </script>
+</body>
+</html>
